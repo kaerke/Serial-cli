@@ -1,5 +1,5 @@
 # Python Serial Terminal + STM32 Flasher (v1.1)
-<img width="875" height="459" alt="��Ļ��ͼ 2025-12-14 214809" src="https://github.com/user-attachments/assets/27c33ccd-38c5-43a9-9bc5-21b1fcf8b645" />
+<img width="875" height="459" alt="ÆÁÄ»½ØÍ¼ 2025-12-14 214809" src="https://github.com/user-attachments/assets/27c33ccd-38c5-43a9-9bc5-21b1fcf8b645" />
 A powerful, modular command-line interface (CLI) tool for serial communication and STM32 firmware flashing. Built with Python and `prompt_toolkit` for a modern, interactive user experience.
 
 ## Features
