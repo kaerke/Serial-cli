@@ -1,9 +1,12 @@
-# Python Serial Terminal + STM32 Flasher
-
+# Python Serial Terminal + STM32 Flasher (v1.1)
+<img width="875" height="459" alt="фад╩╫ьм╪ 2025-12-14 214809" src="https://github.com/user-attachments/assets/27c33ccd-38c5-43a9-9bc5-21b1fcf8b645" />
 A powerful, modular command-line interface (CLI) tool for serial communication and STM32 firmware flashing. Built with Python and `prompt_toolkit` for a modern, interactive user experience.
 
 ## Features
 
+*   **Dual Modes**:
+    *   **Interactive Mode**: Rich TUI with autocomplete, history, and real-time monitoring.
+    *   **CLI Mode**: Scriptable command-line arguments for automation (CI/CD friendly).
 *   **Serial Terminal**:
     *   Interactive command-line interface with autocomplete.
     *   Real-time data monitoring (RX/TX).
@@ -35,21 +38,18 @@ A powerful, modular command-line interface (CLI) tool for serial communication a
 
 ## Usage
 
-### Starting the Application
+### 1. Interactive Mode
 
-You can run the application using the provided scripts or directly via Python:
+Run without arguments to enter the interactive shell:
 
-*   **Windows (Batch)**: Double-click `run.bat` or run `.\run.bat` in CMD.
-*   **Windows (PowerShell)**: Run `.\run.ps1`.
-*   **Python**:
-    ```bash
-    python cli.py
-    ```
+```bash
+python cli.py
+```
 
-### Common Commands
+**Interactive Commands:**
 
 *   **Connection**:
-    *   `/list`: List available serial ports.
+    *   `/list` (or `/ls`): List available serial ports.
     *   `/connect <port> <baud>`: Connect to a serial port (e.g., `/connect COM3 115200`).
     *   `/disconnect`: Disconnect from the current port.
 
@@ -57,7 +57,7 @@ You can run the application using the provided scripts or directly via Python:
     *   `/hex`: Toggle Hex display mode.
     *   `/timestamp`: Toggle timestamp display.
     *   `/newline`: Toggle appending `\r\n` to sent messages.
-    *   `/clear`: Clear the screen.
+    *   `/clear` (or `/cls`): Clear the screen.
 
 *   **STM32 Flashing**:
     *   `/chipinfo`: Read and display STM32 chip information.
@@ -68,8 +68,43 @@ You can run the application using the provided scripts or directly via Python:
     *   `/go <address>`: Jump to the specified address.
 
 *   **General**:
-    *   `/help`: Show help message.
-    *   `/exit`: Exit the application.
+    *   `/help` (or `/h`, `/?`): Show help message.
+    *   `/exit` (or `/quit`): Exit the application.
+
+### 2. CLI Automation Mode
+
+Use command-line arguments for scripting or quick operations:
+
+*   **List Ports**:
+    ```bash
+    python cli.py list
+    ```
+
+*   **Flash Firmware**:
+    ```bash
+    python cli.py flash firmware.hex -p COM3
+    # Options:
+    #   -b, --baud <rate>    (Default: 115200)
+    #   -a, --address <addr> (Default: 0x08000000)
+    #   --no-erase           Skip chip erase
+    #   --no-verify          Skip verification
+    #   -r, --run            Run application after flashing
+    ```
+
+*   **Erase Chip**:
+    ```bash
+    python cli.py erase -p COM3
+    ```
+
+*   **Get Chip Info**:
+    ```bash
+    python cli.py info -p COM3
+    ```
+
+*   **Run Application**:
+    ```bash
+    python cli.py run -p COM3 --address 0x08000000
+    ```
 
 ## Project Structure
 

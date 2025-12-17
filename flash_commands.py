@@ -11,7 +11,7 @@ from prompt_toolkit import print_formatted_text as pt_print
 from stm32_bootloader import STM32Bootloader, STM32_FLASH_START, STM32_WRITE_BLOCK_SIZE
 from hex_parser import parse_hex_file, parse_bin_file, get_chip_name
 from ui_helpers import format_bytes, print_progress_bar, clear_progress_bar, style
-from serial_handler import reader_paused
+# from serial_handler import reader_paused
 
 def print(*values, **kwargs):
     if 'style' not in kwargs:
@@ -181,7 +181,7 @@ def cmd_chip_info(ser):
         print(HTML("<error>X Not connected. Use /connect first.</error>"))
         return
     
-    serial_handler.reader_paused = True
+    serial_handler.manager.reader_paused = True
     time.sleep(0.01)
     
     try:
@@ -242,7 +242,7 @@ def cmd_chip_info(ser):
     except Exception as e:
         print(HTML(f"<error>X Error: {e}</error>"))
     finally:
-        serial_handler.reader_paused = False
+        serial_handler.manager.reader_paused = False
 
 
 def cmd_flash(ser, filepath, start_address=None):
@@ -257,7 +257,7 @@ def cmd_flash(ser, filepath, start_address=None):
         print(HTML(f"<error>X File not found: {filepath}</error>"))
         return
     
-    serial_handler.reader_paused = True
+    serial_handler.manager.reader_paused = True
     time.sleep(0.01)
     try:
         print(HTML(f"\n<header>+============================================================+</header>"))
@@ -272,7 +272,10 @@ def cmd_flash(ser, filepath, start_address=None):
     except Exception as e:
         print(HTML(f"\n<error>X Flashing failed: {e}</error>\n"))
     finally:
-        serial_handler.reader_paused = False
+        # Flush any garbage received during reset/startup
+        if ser and ser.is_open:
+            ser.reset_input_buffer()
+        serial_handler.manager.reader_paused = False
 
 
 def cmd_verify(ser, filepath, start_address=None):
@@ -287,7 +290,7 @@ def cmd_verify(ser, filepath, start_address=None):
         print(HTML(f"<error>X File not found: {filepath}</error>"))
         return
     
-    serial_handler.reader_paused = True
+    serial_handler.manager.reader_paused = True
     time.sleep(0.01)
     try:
         # Parse firmware file
@@ -341,7 +344,7 @@ def cmd_verify(ser, filepath, start_address=None):
     except Exception as e:
         print(HTML(f"\n<error>X Verification error: {e}</error>\n"))
     finally:
-        serial_handler.reader_paused = False
+        serial_handler.manager.reader_paused = False
 
 
 def cmd_erase(ser):
@@ -352,7 +355,7 @@ def cmd_erase(ser):
         print(HTML("<error>X Not connected. Use /connect first.</error>"))
         return
     
-    serial_handler.reader_paused = True
+    serial_handler.manager.reader_paused = True
     time.sleep(0.01)
     try:
         with STM32Bootloader(ser) as bootloader:
@@ -370,7 +373,7 @@ def cmd_erase(ser):
     except Exception as e:
         print(HTML(f"<error>X Erase failed: {e}</error>\n"))
     finally:
-        serial_handler.reader_paused = False
+        serial_handler.manager.reader_paused = False
 
 
 def cmd_read_memory(ser, address, length):
@@ -381,7 +384,7 @@ def cmd_read_memory(ser, address, length):
         print(HTML("<error>X Not connected. Use /connect first.</error>"))
         return
     
-    serial_handler.reader_paused = True
+    serial_handler.manager.reader_paused = True
     time.sleep(0.01)
     try:
         with STM32Bootloader(ser) as bootloader:
@@ -417,7 +420,7 @@ def cmd_read_memory(ser, address, length):
     except Exception as e:
         print(HTML(f"<error>X Read memory failed: {e}</error>\n"))
     finally:
-        serial_handler.reader_paused = False
+        serial_handler.manager.reader_paused = False
 
 
 def cmd_go(ser, address):
@@ -428,7 +431,7 @@ def cmd_go(ser, address):
         print(HTML("<error>X Not connected. Use /connect first.</error>"))
         return
     
-    serial_handler.reader_paused = True
+    serial_handler.manager.reader_paused = True
     time.sleep(0.01)
     try:
         with STM32Bootloader(ser) as bootloader:
@@ -446,4 +449,7 @@ def cmd_go(ser, address):
     except Exception as e:
         print(HTML(f"<error>X Go command failed: {e}</error>\n"))
     finally:
-        serial_handler.reader_paused = False
+        # Flush any garbage received during reset/startup
+        if ser and ser.is_open:
+            ser.reset_input_buffer()
+        serial_handler.manager.reader_paused = False

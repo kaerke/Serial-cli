@@ -96,7 +96,7 @@ def clear_progress_bar():
 def print_banner():
     """Print the application banner with improved styling."""
     print(HTML("\n<border>╔════════════════════════════════════════════════════════════╗</border>"))
-    print(HTML("<border>║</border>   <highlight>Python Serial Terminal</highlight> <info>+</info> <header>STM32 Flasher</header> <key>v1.0</key>              <border>║</border>"))
+    print(HTML("<border>║</border>   <highlight>Python Serial Terminal</highlight> <info>+</info> <header>STM32 Flasher</header> <key>v1.1</key>              <border>║</border>"))
     print(HTML("<border>║</border>   <success>Modular Architecture</success> <border>|</border> <highlight>Performance</highlight> <border>|</border> <header>Stability</header>           <border>║</border>"))
     print(HTML("<border>╚════════════════════════════════════════════════════════════╝</border>"))
     print(HTML("<info>Type</info> <key>/help</key> <info>for commands</info> <border>|</border> <key>/list</key> <info>to scan ports</info>\n"))
@@ -140,7 +140,7 @@ def show_stats(serial_state):
     print(HTML("\n<border>╭─ Connection Statistics ──────────────────────────────────╮</border>"))
     
     if serial_state and serial_state.is_open:
-        rx, tx = serial_handler.get_stats()
+        rx, tx = serial_handler.manager.get_stats()
         
         # Format with units
         rx_str = format_bytes(rx)
@@ -154,15 +154,14 @@ def show_stats(serial_state):
     else:
         print(HTML(f"<border>│</border> <info>Status:</info>      <error>Not connected</error>                         <border>│</border>"))
     
-    print(HTML(f"<border>│</border> <info>Timestamp:</info>    {'<success>✓ Enabled</success>' if serial_handler.show_timestamp else '<error>✗ Disabled</error>'}                        <border>│</border>"))
-    print(HTML(f"<border>│</border> <info>Hex Mode:</info>     {'<success>✓ Enabled</success>' if serial_handler.hex_mode else '<error>✗ Disabled</error>'}                        <border>│</border>"))
+    print(HTML(f"<border>│</border> <info>Timestamp:</info>    {'<success>✓ Enabled</success>' if serial_handler.manager.show_timestamp else '<error>✗ Disabled</error>'}                        <border>│</border>"))
+    print(HTML(f"<border>│</border> <info>Hex Mode:</info>     {'<success>✓ Enabled</success>' if serial_handler.manager.hex_mode else '<error>✗ Disabled</error>'}                        <border>│</border>"))
     print(HTML(f"<border>│</border> <info>Newline:</info>      {'<success>✓ CRLF (\\r\\n)</success>' if cli.append_newline else '<error>✗ RAW</error>'}                   <border>│</border>"))
     print(HTML("<border>╰──────────────────────────────────────────────────────────╯</border>\n"))
 
 
 def clear_screen():
     """Clear the terminal screen."""
-    from serial_handler import rx_needs_prefix
     os.system('cls' if os.name == 'nt' else 'clear')
     print_banner()
 
