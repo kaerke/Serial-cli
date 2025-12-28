@@ -21,7 +21,7 @@ def print(*values, **kwargs):
 
 # Performance constants
 READ_BUFFER_SIZE = 16384      # Increased buffer for high-speed data
-PACKET_TIMEOUT = 0.01         # Reduced latency (10ms)
+PACKET_TIMEOUT = 0.05         # Increased latency (50ms) to prevent fragmented output
 RECONNECT_DELAY = 0.5         # Faster reconnect
 MAX_DISPLAY_BUFFER = 32768    # Larger display buffer
 
@@ -152,7 +152,7 @@ class SerialManager:
                                         elif is_timeout:
                                             # Timeout reached, print what we have
                                             if text:
-                                                print(HTML(f"<rx>{ts_prefix}{html.escape(text)}</rx><info> [TimeOut]</info>"))
+                                                print(HTML(f"<rx>{ts_prefix}{html.escape(text)}</rx>"))
                                             buffer = bytearray()
                                             
                                     except UnicodeDecodeError:
